@@ -6,27 +6,42 @@ import {
   TouchableOpacity,
   View,
 } from "react-native";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useCallback } from "react";
 import { SafeAreaView } from "react-native-safe-area-context";
 import { Video } from "expo-av";
 import capturePokemon from "../../assets/capturePokemon.jpeg";
-import pokeballLogos from "../../assets/backpokemon.png";
 import ModalPokemon from "../ModalPokemon/ModalPokemon";
+import { addPokemonFavorite, isCapturedPokemon } from "../../api/favoriteApi";
+import { useFocusEffect, useNavigation } from "@react-navigation/native";
 
-const CapturePokemon = ({ route: { params }, navigation }) => {
+const CapturePokemon = ({ route: { params } }) => {
+  const navigation = useNavigation();
+  const [pokemonExisted, setPokemonExisted] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [goCapture, setGoCapture] = useState(false);
   const [closePokeball, setClosePokeball] = useState(false);
-  const [isCapturedPokemon, setIsCapturedPokemon] = useState(false);
+  const [isCapturedPokemons, setIsCapturedPokemon] = useState(false);
 
   const handleGoCapture = () => {
-    const isCaptured = Math.floor(Math.random() * 2 + 1);
-    if (isCaptured === 1) setIsCapturedPokemon(true);
-    else setIsCapturedPokemon(false);
+    const isCaptured = Math.floor(Math.random() * 3 + 1);
+    if (isCaptured === 1) setIsCapturedPokemon(false);
+    else {
+      addPokemonFavorite(params.id, params.image, params.name, params.type);
+      setIsCapturedPokemon(true);
+    }
     setGoCapture(!goCapture);
     setTimeout(() => setClosePokeball(true), 3400);
     setTimeout(() => setModalVisible(true), 7000);
   };
+  useFocusEffect(
+    useCallback(() => {
+      (async () => {
+        const pokemosDetailFavorites = await isCapturedPokemon(params.id);
+        if (pokemosDetailFavorites) navigation.navigate("Pokemon");
+      })();
+    }, [])
+  );
+
   const elementsSectionCapturedPokemon = () => {
     return (
       <>
@@ -57,7 +72,7 @@ const CapturePokemon = ({ route: { params }, navigation }) => {
           <ModalPokemon
             modalVisible={modalVisible}
             setModalVisible={setModalVisible}
-            isCapturedPokemon={isCapturedPokemon}
+            isCapturedPokemon={isCapturedPokemons}
             setClosePokeball={setClosePokeball}
             setGoCapture={setGoCapture}
           />

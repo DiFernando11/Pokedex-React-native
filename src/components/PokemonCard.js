@@ -4,16 +4,23 @@ import {
   StyleSheet,
   Image,
   TouchableWithoutFeedback,
+  Button,
 } from "react-native";
 import React from "react";
 import { useNavigation } from "@react-navigation/native";
 import { getColorByPokemonType } from "../utils/constans";
+import { deletePokemonFavorite } from "../api/favoriteApi";
 
-const PokemonCard = ({ pokemon }) => {
+const PokemonCard = ({ pokemon, setRefreshFavorite }) => {
   const navigation = useNavigation();
   const goToPokemon = () => {
     navigation.navigate("Pokemon", { id: pokemon.id });
   };
+  const handleDeletePokemonFavorite = async () => {
+    await deletePokemonFavorite(pokemon.idFavorite);
+    setRefreshFavorite((prev) => !prev);
+  };
+
   const pokemonColor = getColorByPokemonType(pokemon.type);
   const cardStyles = {
     backgroundColor: pokemonColor,
@@ -22,9 +29,15 @@ const PokemonCard = ({ pokemon }) => {
   return (
     <TouchableWithoutFeedback onPress={goToPokemon}>
       <View style={cardStyles}>
-        <Text style={styles.orderPokemon}>
-          {`#${pokemon.order}`.padStart(3, 0)}
-        </Text>
+        {pokemon.order && (
+          <Text style={styles.orderPokemon}>
+            #{`${pokemon.order}`.padStart(3, 0)}
+          </Text>
+        )}
+        {pokemon.idFavorite && pokemon.idFavorite !== 1 && (
+          <Button title="Delete" onPress={handleDeletePokemonFavorite} />
+        )}
+
         <Image style={styles.imagePokemon} source={{ uri: pokemon.image }} />
         <Text style={styles.pokemonName}>{pokemon.name}</Text>
       </View>

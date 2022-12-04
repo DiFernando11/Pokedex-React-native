@@ -25,7 +25,7 @@ const PokemonList = ({ pokemons, loadPokemons, isNext }) => {
           />
         )
       }
-    ></FlatList>
+    />
   );
 };
 const styles = StyleSheet.create({

@@ -34,6 +34,11 @@ const styles = StyleSheet.create({
     marginHorizontal: 10,
     textTransform: "capitalize",
     color: "#fff",
+    textShadowColor: "rgba(0, 0, 0, 0.75)",
+    textShadowOffset: { width: -1, height: 1 },
+    textShadowRadius: 10,
+    borderWidth: 2,
+    borderColor: "#000000",
   },
 });
 

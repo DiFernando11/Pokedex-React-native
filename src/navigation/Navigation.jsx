@@ -12,7 +12,7 @@ const Tab = createBottomTabNavigator();
 
 const Navigation = () => {
   return (
-    <Tab.Navigator>
+    <Tab.Navigator initialRouteName="Pokedex">
       <Tab.Screen
         name="Favorite"
         component={Favorite}
@@ -40,7 +40,6 @@ const Navigation = () => {
           tabBarIcon: ({ color, size }) => (
             <Icon name="user" color={color} size={size} />
           ),
-          headerShown: false,
         }}
       />
     </Tab.Navigator>

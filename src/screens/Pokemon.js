@@ -37,8 +37,10 @@ const Pokemon = ({ route: { params }, navigation }) => {
         <Type types={pokemon.types} />
         <Stats stats={pokemon.stats} />
         <Shiny
+          name={pokemon.name}
           id={pokemon.id}
           image={pokemon.sprites.other["home"].front_default}
+          type={pokemon.types[0].type.name}
         />
       </ImageBackground>
     </ScrollView>
